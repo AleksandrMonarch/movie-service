@@ -1,0 +1,52 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_users_movies_table" author="Aleksandr_Tsarev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users_movies"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users_movies">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movie_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_user_movie_pk" author="Aleksandr_Tsarev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists primaryKeyName="user_movie_pk" tableName="users_movies"/>
+            </not>
+        </preConditions>
+        <addPrimaryKey tableName="users_movies" columnNames="user_id, movie_id" constraintName="user_movie_pk"/>
+    </changeSet>
+
+    <changeSet id="add_user_fk" author="Aleksandr_Tsarev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="user_fk"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="users_movies" baseColumnNames="user_id" constraintName="user_fk"
+                                 referencedTableName="users" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="add_movie_fk" author="Aleksandr_Tsarev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="movie_fk"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="users_movies" baseColumnNames="movie_id" constraintName="movie_fk"
+                                 referencedTableName="movies" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

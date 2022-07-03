@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: Movie Service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/movie_service_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: password
+
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  liquibase:
+    enabled: true
+    change-log: db/changelog/v1/movie-service-liquibase-changelog-v1.xml
+
+logging:
+  file:
+    name: logs/log.log
+  logback:
+    rollingpolicy:
+      max-history: 1
+
+the-movie-db:
+  api:
+    v3:
+      key: "6c558ac31473dee6a1f9ad042f15c5db"
