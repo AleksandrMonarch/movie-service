@@ -1,4 +1,4 @@
-package com.msocial.movie_service.security.id_header_auth;
+package com.msocial.movie_service.security.header_auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
-public class IdAuthenticationFilter implements Filter {
+public class HeaderAuthenticationFilter implements Filter {
 
     private final AuthenticationManager authenticationManager;
 
-    public IdAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public HeaderAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 

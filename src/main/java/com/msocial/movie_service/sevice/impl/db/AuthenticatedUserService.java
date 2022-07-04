@@ -1,9 +1,9 @@
 package com.msocial.movie_service.sevice.impl.db;
 
 import com.msocial.movie_service.exception.auth.AuthenticationException;
-import com.msocial.movie_service.exception.db.UserNotFoundInDBException;
 import com.msocial.movie_service.model.db.User;
 import com.msocial.movie_service.repository.UserRepository;
+import com.msocial.movie_service.security.header_auth.HeaderDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,6 @@ public class AuthenticatedUserService {
         if (Objects.isNull(authentication)) {
             throw new AuthenticationException();
         }
-        String userId = authentication.getName();
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundInDBException(userId));
+        return ((HeaderDetails) authentication.getPrincipal()).getUser();
     }
 }

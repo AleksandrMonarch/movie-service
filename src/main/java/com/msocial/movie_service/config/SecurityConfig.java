@@ -1,6 +1,6 @@
 package com.msocial.movie_service.config;
 
-import com.msocial.movie_service.security.id_header_auth.IdAuthenticationFilter;
+import com.msocial.movie_service.security.header_auth.HeaderAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .logout().disable()
-                .addFilterBefore(new IdAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
+                .addFilterBefore(new HeaderAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
                 .authorizeRequests()
                 .mvcMatchers(POST, API_USER_REGISTRATION).permitAll()
                 .mvcMatchers(GET, API_USER, API_MOVIES_PAGE, API_RECOMMEND).authenticated()

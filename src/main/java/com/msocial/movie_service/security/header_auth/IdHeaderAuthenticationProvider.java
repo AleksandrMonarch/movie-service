@@ -1,4 +1,4 @@
-package com.msocial.movie_service.security.id_header_auth;
+package com.msocial.movie_service.security.header_auth;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,7 @@ public class IdHeaderAuthenticationProvider implements AuthenticationProvider {
         String userId = authentication.getName();
         UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
         return new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     @Override
