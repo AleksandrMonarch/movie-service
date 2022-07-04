@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/logs/log.log
+/logs/log.log.2022-07-03.0.gz
