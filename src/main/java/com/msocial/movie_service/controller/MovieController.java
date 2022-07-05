@@ -51,12 +51,14 @@ public class MovieController {
     @PutMapping(API_FAVORITES_ID)
     public void addMovieInFavorites(@PathVariable("id") String movieId) {
         User user = authenticatedUserService.getAuthenticatedUser();
+        user = userService.getUserFetchMovies(user.getId());
         movieServiceDb.addMovieInFavorite(user, movieId);
     }
 
     @DeleteMapping(API_FAVORITES_ID)
     public void removeMovieFromFavorites(@PathVariable("id") String movieId) {
         User user = authenticatedUserService.getAuthenticatedUser();
+        user = userService.getUserFetchMovies(user.getId());
         movieServiceDb.removeMovieFromFavorites(user, movieId);
     }
 
