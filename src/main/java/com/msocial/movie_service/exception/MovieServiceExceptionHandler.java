@@ -17,21 +17,22 @@ public class MovieServiceExceptionHandler {
 
     @ExceptionHandler(MovieServiceException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public DataResponse<String> handleMovieServiceException(MovieServiceException e) {
+    public BaseExceptionResponse handleMovieServiceException(MovieServiceException e) {
         log.trace(e.getMessage());
-        return new DataResponse<>(false, HttpStatus.NOT_FOUND, e.getMessage());
+        return new BaseExceptionResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus
     public BaseExceptionResponse handleUnknownException(Exception e) {
         log.trace(e.getMessage());
-        return new BaseExceptionResponse(DEFAULT_ERROR_MASSAGE);
+        return new BaseExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, DEFAULT_ERROR_MASSAGE);
     }
 
     @Data
     @AllArgsConstructor
     private static class BaseExceptionResponse {
+        private HttpStatus status;
         private String error;
     }
 }
