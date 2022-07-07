@@ -1,6 +1,6 @@
 package com.msocial.movie_service.security.header_auth;
 
-import com.msocial.movie_service.exception.db.UserNotFoundInDBException;
+import com.msocial.movie_service.exception.auth.MovieServiceAuthenticationException;
 import com.msocial.movie_service.model.db.User;
 import com.msocial.movie_service.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,7 @@ public class HeaderDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundInDBException(userId));
+        User user = userRepository.findById(userId).orElseThrow(MovieServiceAuthenticationException::new);
         return new HeaderDetails(user);
     }
 }

@@ -10,7 +10,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,12 +44,17 @@ public class MovieServiceDB implements MovieService {
         return movieRepository.existsByTitle(movie.getTitle());
     }
 
+//    @Override
+//    @Cacheable(cacheNames = MOVIES_PAGE, key = "{#pageNumber}")
+//    public List<Movie> getMovies(Integer pageNumber) {
+//        PageRequest pageRequest = PageRequest.of(pageNumber, 15);
+//        Page<Movie> page = movieRepository.findAll(pageRequest);
+//        return page.getContent();
+//    }
+
     @Override
-    @Cacheable(cacheNames = MOVIES_PAGE, key = "{#pageNumber}")
-    public List<Movie> getMovies(Integer pageNumber) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, 15);
-        Page<Movie> page = movieRepository.findAll(pageRequest);
-        return page.getContent();
+    public Page<Movie> getMovies(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
 
     @Override

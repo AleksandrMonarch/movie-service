@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IdHeaderAuthenticationProvider implements AuthenticationProvider {
+public class HeaderAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
 
-    public IdHeaderAuthenticationProvider(UserDetailsService userDetailsService) {
+    public HeaderAuthenticationProvider(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

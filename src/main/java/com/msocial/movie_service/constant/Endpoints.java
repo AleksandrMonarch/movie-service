@@ -4,11 +4,9 @@ public interface Endpoints {
 
 //    API_ENDPOINTS
 
-    String API = "api/v1";
+    String API = "/api/v1";
 
     String API_MOVIES = API + "/movies";
-
-    String API_MOVIES_PAGE = API_MOVIES + "/{page}";
 
     String API_FAVORITES = API + "/favorites";
 

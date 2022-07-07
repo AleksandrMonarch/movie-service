@@ -5,6 +5,8 @@ import com.msocial.movie_service.model.db.Movie;
 import com.msocial.movie_service.model.db.User;
 import com.msocial.movie_service.repository.MovieRepository;
 import com.msocial.movie_service.sevice.MovieService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -39,15 +41,16 @@ public class MovieServiceMemory implements MovieService {
     }
 
     @Override
-    public List<Movie> getMovies(Integer pageNumber) {
-        List<Movie> movies = new ArrayList<>(idMovies.values());
-        int end = pageNumber * 15;
-        int start = end - 15;
-        List<Movie> result = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            result.add(movies.get(i));
-        }
-        return result;
+    public Page<Movie> getMovies(Pageable pageable) {
+//        List<Movie> movies = new ArrayList<>(idMovies.values());
+//        int end = pageNumber * 15;
+//        int start = end - 15;
+//        List<Movie> result = new ArrayList<>();
+//        for (int i = start; i < end; i++) {
+//            result.add(movies.get(i));
+//        }
+//        return result;
+        return null;
     }
 
     @Override

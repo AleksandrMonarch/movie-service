@@ -1,6 +1,8 @@
 package com.msocial.movie_service.exception.memory;
 
-public class MemoryException extends RuntimeException{
+import com.msocial.movie_service.exception.MovieServiceException;
+
+public class MemoryException extends MovieServiceException {
 
     public MemoryException(String message) {
         super(message);
