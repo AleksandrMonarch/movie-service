@@ -1,7 +1,6 @@
 package com.msocial.movie_service.exception;
 
-import com.msocial.movie_service.model.dto.DataResponse;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,19 +18,27 @@ public class MovieServiceExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public BaseExceptionResponse handleMovieServiceException(MovieServiceException e) {
         log.trace(e.getMessage());
-        return new BaseExceptionResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        return BaseExceptionResponse.builder()
+                .status(HttpStatus.NOT_FOUND)
+                .error(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus
     public BaseExceptionResponse handleUnknownException(Exception e) {
         log.trace(e.getMessage());
-        return new BaseExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, DEFAULT_ERROR_MASSAGE);
+        return BaseExceptionResponse.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .error(DEFAULT_ERROR_MASSAGE)
+                .build();
     }
 
     @Data
-    @AllArgsConstructor
+    @Builder
     private static class BaseExceptionResponse {
+        @Builder.Default
+        private Boolean success = Boolean.FALSE;
         private HttpStatus status;
         private String error;
     }

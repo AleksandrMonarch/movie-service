@@ -1,7 +1,8 @@
 package com.msocial.movie_service.security.header_auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.msocial.movie_service.model.dto.DataResponse;
+import lombok.Builder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -28,7 +29,18 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.trace(ERROR_MESSAGE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(CONTENT_TYPE);
-        objectMapper.writeValue(response.getWriter(),
-                new DataResponse<>(false, HttpStatus.UNAUTHORIZED, authException.getMessage()));
+        objectMapper.writeValue(response.getWriter(), FailureAuthenticationResponse.builder()
+                .error(authException.getMessage())
+                .build());
+    }
+
+    @Data
+    @Builder
+    private static class FailureAuthenticationResponse {
+        @Builder.Default
+        private Boolean success = Boolean.FALSE;
+        @Builder.Default
+        private HttpStatus status = HttpStatus.UNAUTHORIZED;
+        private String error;
     }
 }
