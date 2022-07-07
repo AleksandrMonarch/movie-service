@@ -1,5 +1,6 @@
 package com.msocial.movie_service.sevice;
 
+import com.msocial.movie_service.enums.LoaderType;
 import com.msocial.movie_service.model.db.Movie;
 import com.msocial.movie_service.model.db.User;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,8 @@ import java.util.Collection;
 import java.util.List;
 
 public interface MovieService {
+
+    LoaderType getLoaderType();
 
     void saveMovies(Collection<Movie> movies);
 

@@ -1,7 +1,9 @@
 package com.msocial.movie_service.controller;
 
-import com.msocial.movie_service.enums.LoadedType;
+import com.msocial.movie_service.enums.LoaderType;
+import com.msocial.movie_service.exception.UnsupportedLoaderType;
 import com.msocial.movie_service.mapper.MovieMapper;
+import com.msocial.movie_service.model.db.Movie;
 import com.msocial.movie_service.model.db.User;
 import com.msocial.movie_service.model.dto.BaseResponse;
 import com.msocial.movie_service.model.dto.DataResponse;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.msocial.movie_service.constant.Endpoints.*;
@@ -33,21 +36,22 @@ public class MovieController {
 
     private final MovieService movieServiceDb;
 
-    private final MovieService movieServiceMemory;
+    private final List<MovieService> movieServices;
 
     private final UserService userService;
 
     private final MovieMapper movieMapper;
 
+
     public MovieController(AuthenticatedUserService authenticatedUserService,
-                           @Qualifier("movieServiceDb") MovieService movieServiceDb,
-                           @Qualifier("movieServiceMemory") MovieService movieServiceMemory,
                            UserService userService,
+                           @Qualifier("movieServiceDb") MovieService movieServiceDb,
+                           List<MovieService> movieServices,
                            MovieMapper movieMapper) {
         this.authenticatedUserService = authenticatedUserService;
-        this.movieServiceDb = movieServiceDb;
         this.userService = userService;
-        this.movieServiceMemory = movieServiceMemory;
+        this.movieServiceDb = movieServiceDb;
+        this.movieServices = movieServices;
         this.movieMapper = movieMapper;
     }
 
@@ -77,22 +81,16 @@ public class MovieController {
     }
 
     @GetMapping(API_RECOMMEND)
-    public DataResponse<List<MovieDto>> getRecommendedMovies(@RequestParam("loaderType") LoadedType loadedType) {
+    public DataResponse<List<MovieDto>> getRecommendedMovies(@RequestParam("loaderType") LoaderType loaderType) {
         User user = authenticatedUserService.getAuthenticatedUser();
         user = userService.getUserFetchMovies(user.getId());
-        switch (loadedType) {
-            case IN_MEMORY: {
-                List<MovieDto> movies = movieServiceMemory.getRecommendedMovies(user.getMovies()).stream()
-                        .map(movieMapper::movieToDto)
-                        .collect(Collectors.toList());
-                return new DataResponse<>(true, HttpStatus.OK, movies);
-            }
-            default: {
-                List<MovieDto> movies = movieServiceDb.getRecommendedMovies(user.getMovies()).stream()
-                        .map(movieMapper::movieToDto)
-                        .collect(Collectors.toList());
-                return new DataResponse<>(true, HttpStatus.OK, movies);
-            }
-        }
+
+        List<Movie> movies = movieServices.stream()
+                .filter(movieService -> Objects.equals(movieService.getLoaderType().getName(), loaderType.getName()))
+                .findFirst().orElseThrow(() -> new UnsupportedLoaderType(loaderType))
+                .getRecommendedMovies(user.getMovies());
+
+        return new DataResponse<>(true, HttpStatus.OK,
+                movies.stream().map(movieMapper::movieToDto).collect(Collectors.toList()));
     }
 }

@@ -3,14 +3,14 @@ package com.msocial.movie_service.enums;
 import lombok.Getter;
 
 @Getter
-public enum LoadedType {
+public enum LoaderType {
 
     IN_MEMORY("inMemory"),
     SQL("sql");
 
     private final String name;
 
-    LoadedType(String name) {
+    LoaderType(String name) {
         this.name = name;
     }
 }

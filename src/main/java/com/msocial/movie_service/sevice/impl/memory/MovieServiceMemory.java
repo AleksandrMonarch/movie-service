@@ -1,11 +1,13 @@
 package com.msocial.movie_service.sevice.impl.memory;
 
+import com.msocial.movie_service.enums.LoaderType;
 import com.msocial.movie_service.exception.memory.MovieNotFoundInMemoryException;
 import com.msocial.movie_service.model.db.Movie;
 import com.msocial.movie_service.model.db.User;
 import com.msocial.movie_service.repository.MovieRepository;
 import com.msocial.movie_service.sevice.MovieService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,11 @@ public class MovieServiceMemory implements MovieService {
     }
 
     @Override
+    public LoaderType getLoaderType() {
+        return LoaderType.IN_MEMORY;
+    }
+
+    @Override
     public void saveMovies(Collection<Movie> movies) {
         movies.forEach(movie -> idMovies.putIfAbsent(movie.getId(), movie));
     }
@@ -42,15 +49,14 @@ public class MovieServiceMemory implements MovieService {
 
     @Override
     public Page<Movie> getMovies(Pageable pageable) {
-//        List<Movie> movies = new ArrayList<>(idMovies.values());
-//        int end = pageNumber * 15;
-//        int start = end - 15;
-//        List<Movie> result = new ArrayList<>();
-//        for (int i = start; i < end; i++) {
-//            result.add(movies.get(i));
-//        }
-//        return result;
-        return null;
+        List<Movie> movies = new ArrayList<>(idMovies.values());
+        int end = (pageable.getPageNumber() + 1) * pageable.getPageSize();
+        int start = end - pageable.getPageSize();
+        List<Movie> result = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            result.add(movies.get(i));
+        }
+        return new PageImpl<>(result);
     }
 
     @Override

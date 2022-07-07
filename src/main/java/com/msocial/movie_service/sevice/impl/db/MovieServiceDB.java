@@ -1,5 +1,6 @@
 package com.msocial.movie_service.sevice.impl.db;
 
+import com.msocial.movie_service.enums.LoaderType;
 import com.msocial.movie_service.exception.db.MovieNotFoundException;
 import com.msocial.movie_service.model.db.Movie;
 import com.msocial.movie_service.model.db.User;
@@ -27,6 +28,11 @@ public class MovieServiceDB implements MovieService {
 
     public MovieServiceDB(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
+    }
+
+    @Override
+    public LoaderType getLoaderType() {
+        return LoaderType.SQL;
     }
 
     @Override
