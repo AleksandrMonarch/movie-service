@@ -1,7 +1,6 @@
 package com.msocial.movie_service.controller;
 
-import com.msocial.movie_service.enums.LoaderType;
-import com.msocial.movie_service.exception.UnsupportedLoaderType;
+import com.msocial.movie_service.exception.controller.UnsupportedLoaderType;
 import com.msocial.movie_service.mapper.MovieMapper;
 import com.msocial.movie_service.model.db.Movie;
 import com.msocial.movie_service.model.db.User;
@@ -81,16 +80,19 @@ public class MovieController {
     }
 
     @GetMapping(API_RECOMMEND)
-    public DataResponse<List<MovieDto>> getRecommendedMovies(@RequestParam("loaderType") LoaderType loaderType) {
+    public DataResponse<List<MovieDto>> getRecommendedMovies(@RequestParam("loaderType") String loaderType) {
         User user = authenticatedUserService.getAuthenticatedUser();
         user = userService.getUserFetchMovies(user.getId());
 
-        List<Movie> movies = movieServices.stream()
-                .filter(movieService -> Objects.equals(movieService.getLoaderType().getName(), loaderType.getName()))
-                .findFirst().orElseThrow(() -> new UnsupportedLoaderType(loaderType))
-                .getRecommendedMovies(user.getMovies());
+        List<Movie> movies = getServiceByLoaderType(loaderType).getRecommendedMovies(user.getMovies());
 
         return new DataResponse<>(true, HttpStatus.OK,
                 movies.stream().map(movieMapper::movieToDto).collect(Collectors.toList()));
+    }
+
+    private MovieService getServiceByLoaderType(String loaderType) {
+        return movieServices.stream()
+                .filter(movieService -> Objects.equals(movieService.getLoaderType().getName(), loaderType))
+                .findFirst().orElseThrow(() -> new UnsupportedLoaderType(loaderType));
     }
 }

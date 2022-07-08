@@ -1,5 +1,6 @@
 package com.msocial.movie_service.exception;
 
+import com.msocial.movie_service.exception.controller.UnsupportedLoaderType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,16 @@ public class MovieServiceExceptionHandler {
         log.trace(e.getMessage());
         return BaseExceptionResponse.builder()
                 .status(HttpStatus.NOT_FOUND)
+                .error(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseExceptionResponse handleUnsupportedLoaderTypeException(UnsupportedLoaderType e) {
+        log.trace(e.getMessage());
+        return BaseExceptionResponse.builder()
+                .status(HttpStatus.BAD_REQUEST)
                 .error(e.getMessage())
                 .build();
     }
