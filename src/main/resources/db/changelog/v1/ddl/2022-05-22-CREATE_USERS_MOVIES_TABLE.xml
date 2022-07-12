@@ -6,47 +6,22 @@
 
     <changeSet id="create_users_movies_table" author="Aleksandr_Tsarev">
         <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="users_movies"/>
-            </not>
+            <sqlCheck expectedResult="0">
+                select count(*) from information_schema.tables where table_name = 'users_movies'
+            </sqlCheck>
         </preConditions>
-        <createTable tableName="users_movies">
-            <column name="user_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="movie_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+        <sql>
+            CREATE TABLE users_movies (
+                user_id VARCHAR(255),
+                movie_id VARCHAR(255),
+                CONSTRAINT users_movies_pk PRIMARY KEY (user_id, movie_id),
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (movie_id) REFERENCES movies(id));
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE users_movies;
+            </sql>
+        </rollback>
     </changeSet>
-
-    <changeSet id="add_user_movie_pk" author="Aleksandr_Tsarev">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <primaryKeyExists primaryKeyName="user_movie_pk" tableName="users_movies"/>
-            </not>
-        </preConditions>
-        <addPrimaryKey tableName="users_movies" columnNames="user_id, movie_id" constraintName="user_movie_pk"/>
-    </changeSet>
-
-    <changeSet id="add_user_fk" author="Aleksandr_Tsarev">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="user_fk"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseTableName="users_movies" baseColumnNames="user_id" constraintName="user_fk"
-                                 referencedTableName="users" referencedColumnNames="id"/>
-    </changeSet>
-
-    <changeSet id="add_movie_fk" author="Aleksandr_Tsarev">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="movie_fk"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseTableName="users_movies" baseColumnNames="movie_id" constraintName="movie_fk"
-                                 referencedTableName="movies" referencedColumnNames="id"/>
-    </changeSet>
-
 </databaseChangeLog>

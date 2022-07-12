@@ -6,21 +6,21 @@
 
     <changeSet id="create_movies_table" author="Aleksandr_Tsarev">
         <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="movies"/>
-            </not>
+            <sqlCheck expectedResult="0">
+                select count(*) from information_schema.tables where table_name = 'movies'
+            </sqlCheck>
         </preConditions>
-        <createTable tableName="movies">
-            <column name="id" type="VARCHAR(255)">
-                <constraints primaryKey="true" primaryKeyName="movie_pk"/>
-            </column>
-            <column name="title" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="poster_path" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+        <sql>
+            CREATE TABLE movies (
+                id VARCHAR(255) PRIMARY KEY,
+                title VARCHAR(255) NOT NULL UNIQUE,
+                poster_path TEXT NOT NULL);
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE movies;
+            </sql>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>
